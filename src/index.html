@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Responsive website example with navigation, CSS Grid, and Flexbox." />
+  <title>MySite</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .quiz-fade {
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .quiz-show {
+      opacity: 1;
+      transition: opacity 0.5s;
+    }
+    .flashcard {
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .flashcard.flipped .flashcard-inner {
+      transform: rotateY(180deg);
+    }
+    .flashcard-front, .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      border-radius: var(--radius, 10px);
+      box-sizing: border-box;
+      padding: 1rem;
+    }
+    .flashcard-front {
+      background: var(--card-bg, #771010);
+      color: var(--primary-color, #6a4cff);
+      font-weight: bold;
+    }
+    .flashcard-back {
+      background: var(--primary-color, #6a4cff);
+      color: #ffffff;
+      transform: rotateY(180deg);
+    }
+    .grid.flashcard-grid {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      align-items: stretch;
+      margin: 2rem 0;
+    }
+    .flashcard {
+      flex: 1 1 220px;
+      max-width: 320px;
+      min-width: 220px;
+      display: flex;
+      align-items: stretch;
+      height: 180px;
+    }
+    .flashcard-inner {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <h1>TankQuiz</h1>
+        <button class="menu-btn">&#9776;</button>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Shop</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h2>Welcome to the TankQuiz</h2>
+    <p>Learn to know the modern tanks.</p>
+    <button class="btn" id="start-quiz-btn">Get Started</button>
+  </section>
+
+  <!-- Quiz Section (hidden by default) -->
+  <section class="container" id="quiz-section" style="display:none;">
+    <div id="quiz-content">
+      <!-- Quiz content will be injected here -->
+    </div>
+    <div id="quiz-feedback" style="margin-top:1rem;font-weight:bold;"></div>
+    <div id="quiz-score" style="margin-top:1rem;"></div>
+  </section>
+
+  <section class="container">
+    <div class="grid flashcard-grid">
+      <div class="card flashcard">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">How much does the Leopard 2A8 weigh?</div>
+          <div class="flashcard-back">66 tonnes.</div>
+        </div>
+      </div>
+      <div class="card flashcard">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">What kind of fuel does the M1A2 Abrams SEP V3 use?</div>
+          <div class="flashcard-back">JP-8 jet fuel due to the gas turbine engine.</div>
+        </div>
+      </div>
+      <div class="card flashcard">
+        <div class="flashcard-inner">
+          <div class="flashcard-front" style="font-size:1.1rem;">What is the main armament of the Panther KF51</div>
+          <div class="flashcard-back" style="font-size:0.95rem;">The primary armament of the KF51 is a stabilised Rheinmetall Rh-130 L/52 130 mm smoothbore cannon.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-title">Question 1: The notorious Leopard 2A8 tank is produced by what companies?</div>
+      <div class="accordion-content">Leopard 2 family of tanks manufactured by the German companies KMW (Krauss-Maffei Wegmann) and Rheinmetall..</div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-title">The M1A2 Abrams SEP V3 is made by what company?</div>
+      <div class="accordion-content">General dynamics.</div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 TankQuiz. All rights reserved.</p>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Shop</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </footer>
+
+  <script>
+    document.querySelector('.menu-btn').addEventListener('click', function () {
+      document.querySelector('nav ul').classList.toggle('open');
+    });
+
+    document.querySelectorAll('.accordion-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const content = title.nextElementSibling;
+        const parent = title.parentElement;
+        content.classList.toggle('open');
+        parent.classList.toggle('open');
+      });
+    });
+
+    // --- Quiz Logic ---
+    const quizData = [
+      {
+        image: 'https://8a17c282.delivery.rocketcdn.me/wp-content/uploads/2023/04/a-kmw-leopard-2a7-with-trophy-aps-at-nato-day-2022-4608-x-v0-9cxnnjwz5afa1.jpg-scaled.webp',
+        question: 'Which tank is this?',
+        options: ['Leopard 2A8', 'M1A2 Abrams SEP V3', 'T-90M'],
+        answer: 0
+      },
+      {
+        image: 'https://www.gd.com/-/media/gd-corporate/press-releases/2020/gdls46billionabramscontract.ashx',
+        question: 'Which tank is this?',
+        options: ['Challenger 2 Black Knight', 'M1A2 Abrams SEP V3', 'Leclerc XLR'],
+        answer: 1
+      },
+      {
+        image: 'https://www.rheinmetall.com/Rheinmetall%20Group/Systeme%20und%20Produkte/Fahrzeugsysteme/gepanzerte-kettenfahrzeuge/Panther/132563/image-thumb__132563__small-stage/2023-12-15-panther-entwicklungsauftrag-ungarn.db22de38.jpg',
+        question: 'Which tank is this?',
+        options: ['Panther KF51', 'Merkava MK.III.D', 'K2 Black Panther'],
+        answer: 0
+      }
+    ];
+
+    let currentQuiz = 0;
+    let score = 0;
+
+    const heroSection = document.querySelector('.hero');
+    const quizSection = document.getElementById('quiz-section');
+    const quizContent = document.getElementById('quiz-content');
+    const quizFeedback = document.getElementById('quiz-feedback');
+    const quizScore = document.getElementById('quiz-score');
+    const startQuizBtn = document.getElementById('start-quiz-btn');
+
+    function showQuizQuestion() {
+      const q = quizData[currentQuiz];
+      quizFeedback.textContent = '';
+      quizScore.textContent = `Score: ${score} / ${quizData.length}`;
+      // Fade out if content exists
+      if (quizContent.innerHTML.trim() !== '') {
+        quizContent.classList.remove('quiz-show');
+        quizContent.classList.add('quiz-fade');
+        setTimeout(() => {
+          renderQuizContent(q);
+          quizContent.classList.remove('quiz-fade');
+          quizContent.classList.add('quiz-show');
+        }, 500);
+      } else {
+        renderQuizContent(q);
+        quizContent.classList.add('quiz-show');
+      }
+    }
+
+    function renderQuizContent(q) {
+      quizContent.innerHTML = `
+        <div style="display:flex;justify-content:center;">
+          <img src="${q.image}" alt="Tank" style="max-width:100%;width:600px;height:400px;object-fit:cover;border-radius:10px;margin-bottom:1rem;">
+        </div>
+        <h3 style="margin-bottom:1rem;text-align:center;">${q.question}</h3>
+        <div style="text-align:center;">
+          ${q.options.map((opt, idx) => `<button class="btn quiz-option" data-idx="${idx}" style="margin:0.5rem 0.5rem 0 0;">${opt}</button>`).join('')}
+        </div>
+      `;
+      document.querySelectorAll('.quiz-option').forEach(btn => {
+        btn.onclick = function() {
+          const selected = Number(this.getAttribute('data-idx'));
+          if (selected === q.answer) {
+            quizFeedback.textContent = 'Correct!';
+            quizFeedback.style.color = 'green';
+            score++;
+          } else {
+            quizFeedback.textContent = 'Incorrect!';
+            quizFeedback.style.color = 'red';
+          }
+          quizScore.textContent = `Score: ${score} / ${quizData.length}`;
+          // Disable all buttons
+          document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+          setTimeout(() => {
+            currentQuiz++;
+            if (currentQuiz < quizData.length) {
+              showQuizQuestion();
+            } else {
+              showQuizResult();
+            }
+          }, 1200);
+        };
+      });
+    }
+
+    function showQuizResult() {
+      quizContent.innerHTML = `<h3>Quiz Complete!</h3>`;
+      quizFeedback.textContent = '';
+      quizScore.textContent = `Final Score: ${score} / ${quizData.length}`;
+      setTimeout(() => {
+        quizSection.style.display = 'none';
+        heroSection.style.display = 'block';
+      }, 1800);
+    }
+
+    startQuizBtn.addEventListener('click', function() {
+      heroSection.style.display = 'none';
+      quizSection.style.display = 'block';
+      currentQuiz = 0;
+      score = 0;
+      showQuizQuestion();
+    });
+
+    // Flashcard flip logic
+    document.querySelectorAll('.flashcard').forEach(card => {
+      card.addEventListener('click', function () {
+        card.classList.toggle('flipped');
+      });
+    });
+  </script>
+</body>
+</html>
